@@ -1,7 +1,15 @@
-#include <stdbool.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 bool active = true;
+
+struct Task {
+  char title[50];
+  char description[50];
+};
+struct Task listOfTasks[10] = {
+    {"", ""}
+};
 
 void promtSelection(int selection) {
   switch (selection) {
