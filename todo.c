@@ -13,6 +13,16 @@ struct Task listOfTasks[10] = {
     {"", ""}
 };
 
+void displayListOfTask() {
+    int i;
+    for (i = 0; i < 10; i++) {
+      printf("Task title: %s\n", listOfTasks[i].title);
+      printf("Task description: %s\n", listOfTasks[i].description);
+      printf("************************\n");
+    }
+    return;
+}
+
 void addTask() {
   int listItemIndex = listItem;
   printf("Enter task title: ");
@@ -25,17 +35,17 @@ void addTask() {
 
 void promptSelection(int selection) {
   switch (selection) {
-  case 1:
-    addTask();
-    break;
-  case 2:
-    printf("You've selected 2.\n");
-    break;
-  case 3:
-    active = false;
-    break;
-  default:
-    printf("Invalid option.\n");
+    case 1:
+      addTask();
+      break;
+    case 2:
+      displayListOfTask();
+      break;
+    case 3:
+      active = false;
+      break;
+    default:
+      printf("Invalid option.\n");
   }
 }
 
