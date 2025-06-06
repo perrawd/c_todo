@@ -1,21 +1,33 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 
 bool active = true;
 int listItem = 0;
 
 struct Task { char title[50]; char description[50]; };
-struct Task listOfTasks[10] = {{"", ""}};
+struct Task *listOfTasks = NULL;
 
+void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
 void addTask();
 void displayListOfTask();
 
 int main(void) {
+  setListOfTasks();
   while (active) displayMenu();
   return 0;
+}
+
+void setListOfTasks() {
+  listOfTasks = (struct Task*)malloc(5 * sizeof(struct Task));
+  printf("Memory allocated.\n");
+  if (listOfTasks == NULL) {
+    printf("Memory not allocated.\n");
+    exit(1);
+  }
 }
 
 void displayMenu() {
