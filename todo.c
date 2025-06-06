@@ -66,7 +66,7 @@ void addTask() {
 
 void displayListOfTask() {
   int i;
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < listItem; i++) {
     printf("Task title: %s\n", listOfTasks[i].title);
     printf("Task description: %s\n", listOfTasks[i].description);
     printf("************************\n");
