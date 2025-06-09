@@ -6,7 +6,7 @@
 bool active = true;
 int listItem = 0;
 
-struct Task { char title[50]; char description[50]; bool completed;};
+struct Task { int id; char title[50]; char description[50]; bool completed;};
 struct Task *listOfTasks = NULL;
 
 void setListOfTasks();
@@ -60,6 +60,7 @@ void addTask() {
   fgets(listOfTasks[listItemIndex].title, sizeof(listOfTasks[0].title), stdin);
   // Remove the newline character if present
   listOfTasks[listItemIndex].title[strlen(listOfTasks[listItemIndex].title) - 1] = '\0';
+  listOfTasks[listItemIndex].id = listItem + 1;
   listItem += 1;
   return;
 }
@@ -67,6 +68,7 @@ void addTask() {
 void displayListOfTask() {
   int i;
   for (i = 0; i < listItem; i++) {
+    printf("Task ID: %d\n", listOfTasks[i].id);
     printf("Task title: %s\n", listOfTasks[i].title);
     printf("Task description: %s\n", listOfTasks[i].description);
     printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
