@@ -6,7 +6,7 @@
 bool active = true;
 int listItem = 0;
 
-struct Task { char title[50]; char description[50]; };
+struct Task { char title[50]; char description[50]; bool completed;};
 struct Task *listOfTasks = NULL;
 
 void setListOfTasks();
@@ -69,6 +69,7 @@ void displayListOfTask() {
   for (i = 0; i < listItem; i++) {
     printf("Task title: %s\n", listOfTasks[i].title);
     printf("Task description: %s\n", listOfTasks[i].description);
+    printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
     printf("************************\n");
   }
   return;
