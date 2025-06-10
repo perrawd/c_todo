@@ -54,17 +54,18 @@ void promptSelection(int selection) {
   }
 }
 
+char* getInputText(char* descriptionType) {
+  static char inputText[50];
+  printf("Enter task %s: ", descriptionType);
+  fgets(inputText, sizeof(inputText), stdin);
+  inputText[strcspn(inputText, "\n")] = 0;
+  return inputText;
+}
+
 void addTask() {
   struct Task newTask = { .ID = listItem + 1, .completed = false };
-
-  printf("Enter task title: ");
-  fgets(newTask.title, sizeof(newTask.title), stdin);
-  newTask.title[strcspn(newTask.title, "\n")] = 0;
-
-  printf("Enter task description (optional): ");
-  fgets(newTask.description, sizeof(newTask.description), stdin);
-  newTask.description[strcspn(newTask.description, "\n")] = 0;
-
+  strcpy(newTask.title, getInputText("title"));
+  strcpy(newTask.description, getInputText("description"));
   memcpy(&listOfTasks[listItem], &newTask, sizeof(struct Task));
   listItem++;
   return;
