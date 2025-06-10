@@ -6,7 +6,7 @@
 bool active = true;
 int listItem = 0;
 
-struct Task { int id; char title[50]; char description[50]; bool completed;};
+struct Task { const int ID; char title[50]; char description[50]; bool completed;};
 struct Task *listOfTasks = NULL;
 
 void setListOfTasks();
@@ -55,18 +55,19 @@ void promptSelection(int selection) {
 }
 
 void addTask() {
-  listOfTasks[listItem].id = listItem + 1;
+  struct Task newTask = { .ID = listItem + 1 };
   printf("Enter task title: ");
-  fgets(listOfTasks[listItem].title, sizeof(listOfTasks[0].title), stdin);
-  listOfTasks[listItem].title[strcspn(listOfTasks[listItem].title, "\n")] = 0;
-  listItem += 1;
+  fgets(newTask.title, sizeof(newTask.title), stdin);
+  newTask.title[strcspn(newTask.title, "\n")] = 0;
+  memcpy(&listOfTasks[listItem], &newTask, sizeof(struct Task));
+  listItem++;
   return;
 }
 
 void displayListOfTask() {
   int i;
   for (i = 0; i < listItem; i++) {
-    printf("Task ID: %d\n", listOfTasks[i].id);
+    printf("Task ID: %d\n", listOfTasks[i].ID);
     printf("Task title: %s\n", listOfTasks[i].title);
     printf("Task description: %s\n", listOfTasks[i].description);
     printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
