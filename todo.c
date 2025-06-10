@@ -13,6 +13,7 @@ void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
 void addTask();
+char* getInputText(char* descriptionType);
 void displayListOfTask();
 
 int main(void) {
@@ -54,14 +55,6 @@ void promptSelection(int selection) {
   }
 }
 
-char* getInputText(char* descriptionType) {
-  static char inputText[50];
-  printf("Enter task %s: ", descriptionType);
-  fgets(inputText, sizeof(inputText), stdin);
-  inputText[strcspn(inputText, "\n")] = 0;
-  return inputText;
-}
-
 void addTask() {
   struct Task newTask = { .ID = listItem + 1, .completed = false };
   strcpy(newTask.title, getInputText("title"));
@@ -69,6 +62,14 @@ void addTask() {
   memcpy(&listOfTasks[listItem], &newTask, sizeof(struct Task));
   listItem++;
   return;
+}
+
+char* getInputText(char* descriptionType) {
+  static char inputText[50];
+  printf("Enter task %s: ", descriptionType);
+  fgets(inputText, sizeof(inputText), stdin);
+  inputText[strcspn(inputText, "\n")] = 0;
+  return inputText;
 }
 
 void displayListOfTask() {
