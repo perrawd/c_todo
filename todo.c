@@ -55,12 +55,10 @@ void promptSelection(int selection) {
 }
 
 void addTask() {
-  int listItemIndex = listItem;
+  listOfTasks[listItem].id = listItem + 1;
   printf("Enter task title: ");
-  fgets(listOfTasks[listItemIndex].title, sizeof(listOfTasks[0].title), stdin);
-  // Remove the newline character if present
-  listOfTasks[listItemIndex].title[strlen(listOfTasks[listItemIndex].title) - 1] = '\0';
-  listOfTasks[listItemIndex].id = listItem + 1;
+  fgets(listOfTasks[listItem].title, sizeof(listOfTasks[0].title), stdin);
+  listOfTasks[listItem].title[strcspn(listOfTasks[listItem].title, "\n")] = 0;
   listItem += 1;
   return;
 }
