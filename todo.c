@@ -55,10 +55,16 @@ void promptSelection(int selection) {
 }
 
 void addTask() {
-  struct Task newTask = { .ID = listItem + 1 };
+  struct Task newTask = { .ID = listItem + 1, .completed = false };
+
   printf("Enter task title: ");
   fgets(newTask.title, sizeof(newTask.title), stdin);
   newTask.title[strcspn(newTask.title, "\n")] = 0;
+
+  printf("Enter task description (optional): ");
+  fgets(newTask.description, sizeof(newTask.description), stdin);
+  newTask.description[strcspn(newTask.description, "\n")] = 0;
+
   memcpy(&listOfTasks[listItem], &newTask, sizeof(struct Task));
   listItem++;
   return;
