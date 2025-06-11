@@ -72,6 +72,13 @@ char* getInputText(char* descriptionType) {
   return inputText;
 }
 
+int getTaskIndex(int id) {
+  int listOfTasksLength = getListOfTasksLength();
+  for (int i = 0; i < listOfTasksLength; i++) {
+    if (listOfTasks[i].ID == id) return i;
+  }
+}
+
 int getListOfTasksLength() {
   int listOfTasksLength = sizeof(*listOfTasks) / sizeof(listOfTasks[0]);
   return listOfTasksLength;
