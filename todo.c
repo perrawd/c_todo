@@ -72,8 +72,14 @@ char* getInputText(char* descriptionType) {
   return inputText;
 }
 
+int getListOfTasksLength() {
+  int listOfTasksLength = sizeof(*listOfTasks) / sizeof(listOfTasks[0]);
+  return listOfTasksLength;
+}
+
 void displayListOfTask() {
   int i;
+  int listOfTasksLength = getListOfTasksLength();
   for (i = 0; i < listItem; i++) {
     printf("Task ID: %d\n", listOfTasks[i].ID);
     printf("Task title: %s\n", listOfTasks[i].title);
