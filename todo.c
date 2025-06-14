@@ -4,7 +4,7 @@
 #include <string.h>
 
 bool active = true;
-int listItem = 0;
+int amountOfTasks = 0;
 
 struct Task { const int ID; char title[50]; char description[50]; bool completed;};
 struct Task *listOfTasks = NULL;
@@ -56,11 +56,11 @@ void promptSelection(int selection) {
 }
 
 void addTask() {
-  struct Task newTask = { .ID = listItem + 1, .completed = false };
+  struct Task newTask = { .ID = amountOfTasks + 1, .completed = false };
   strcpy(newTask.title, getInputText("title"));
   strcpy(newTask.description, getInputText("description"));
-  memcpy(&listOfTasks[listItem], &newTask, sizeof(struct Task));
-  listItem++;
+  memcpy(&listOfTasks[amountOfTasks], &newTask, sizeof(struct Task));
+  amountOfTasks++;
   return;
 }
 
@@ -72,13 +72,6 @@ char* getInputText(char* descriptionType) {
   return inputText;
 }
 
-int getTaskIndex(int id) {
-  int listOfTasksLength = getListOfTasksLength();
-  for (int i = 0; i < listOfTasksLength; i++) {
-    if (listOfTasks[i].ID == id) return i;
-  }
-}
-
 int getListOfTasksLength() {
   int listOfTasksLength = sizeof(*listOfTasks) / sizeof(listOfTasks[0]);
   return listOfTasksLength;
@@ -87,7 +80,7 @@ int getListOfTasksLength() {
 void displayListOfTask() {
   int i;
   int listOfTasksLength = getListOfTasksLength();
-  for (i = 0; i < listItem; i++) {
+  for (i = 0; i < amountOfTasks; i++) {
     printf("Task ID: %d\n", listOfTasks[i].ID);
     printf("Task title: %s\n", listOfTasks[i].title);
     printf("Task description: %s\n", listOfTasks[i].description);
