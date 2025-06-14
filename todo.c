@@ -13,6 +13,7 @@ void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
 void addTask();
+void editTask();
 char* getInputText(char* descriptionType);
 void displayListOfTask();
 
@@ -33,7 +34,7 @@ void setListOfTasks() {
 
 void displayMenu() {
   int selection;
-  printf("1. Add task\n2. List tasks\n3. Exit program\n");
+  printf("1. Add task\n2. List tasks\n3. Edit task\n4. Exit program\n");
   scanf("%d", &selection);
   while (getchar() != '\n');
   promptSelection(selection);
@@ -48,6 +49,9 @@ void promptSelection(int selection) {
       displayListOfTask();
       break;
     case 3:
+      editTask();
+      break;
+    case 4:
       active = false;
       break;
     default:
@@ -62,6 +66,26 @@ void addTask() {
   memcpy(&listOfTasks[amountOfTasks], &newTask, sizeof(struct Task));
   amountOfTasks++;
   return;
+}
+
+void editTask() {
+  printf("(Enter 0 for list of tasks)\n");
+  printf("Enter the index of the task you want to edit: ");
+  int taskIndex;
+  scanf("%d", &taskIndex); taskIndex -= 1;
+  while (getchar() != '\n');
+
+  int selection;
+  printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Cancel\n");
+  scanf("%d", &selection);
+  while (getchar() != '\n');
+  
+  switch(selection) {
+    case 1: listOfTasks[taskIndex].completed = true; break;
+    case 2: memcpy(&listOfTasks[taskIndex].title, getInputText("title"), sizeof(listOfTasks[taskIndex].title)); break;
+    case 3: memcpy(&listOfTasks[taskIndex].description, getInputText("description"), sizeof(listOfTasks[taskIndex].description)); break;
+    default: return;
+  }
 }
 
 char* getInputText(char* descriptionType) {
