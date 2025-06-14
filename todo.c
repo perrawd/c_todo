@@ -75,7 +75,7 @@ char* getInputText(char* descriptionType) {
 void displayListOfTask() {
   int i;
   for (i = 0; i < amountOfTasks; i++) {
-    printf("Task ID: %d\n", listOfTasks[i].ID);
+    printf("Task index: %d\n", i + 1);
     printf("Task title: %s\n", listOfTasks[i].title);
     printf("Task description: %s\n", listOfTasks[i].description);
     printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
