@@ -16,6 +16,9 @@ void addTask();
 void editTask();
 char* getInputText(char* descriptionType);
 void displayListOfTask();
+int getTaskIndex();
+int getEditType();
+void processEdit(int taskIndex, int editType);
 
 int main(void) {
   setListOfTasks();
@@ -69,18 +72,30 @@ void addTask() {
 }
 
 void editTask() {
+  int taskIndex = getTaskIndex();
+  int editType = getEditType();
+  processEdit(taskIndex, editType);
+}
+
+int getTaskIndex() {
   printf("(Enter 0 for list of tasks)\n");
   printf("Enter the index of the task you want to edit: ");
   int taskIndex;
   scanf("%d", &taskIndex); taskIndex -= 1;
   while (getchar() != '\n');
+  return taskIndex;
+}
 
-  int selection;
+int getEditType() {
+  int editType;
   printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Cancel\n");
-  scanf("%d", &selection);
+  scanf("%d", &editType);
   while (getchar() != '\n');
-  
-  switch(selection) {
+  return editType;
+}
+
+void processEdit(int taskIndex, int editType) {
+  switch(editType) {
     case 1: listOfTasks[taskIndex].completed = true; break;
     case 2: memcpy(&listOfTasks[taskIndex].title, getInputText("title"), sizeof(listOfTasks[taskIndex].title)); break;
     case 3: memcpy(&listOfTasks[taskIndex].description, getInputText("description"), sizeof(listOfTasks[taskIndex].description)); break;
