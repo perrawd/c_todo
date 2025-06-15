@@ -11,11 +11,12 @@ struct Task *listOfTasks = NULL;
 
 void setListOfTasks();
 void displayMenu();
+void clearScreen();
 void promptSelection(int selection);
 void addTask();
-void editTask();
 char* getInputText(char* descriptionType);
 void displayListOfTask();
+void editTask();
 int getTaskIndex();
 int getEditType();
 void processEdit(int taskIndex, int editType);
@@ -29,15 +30,10 @@ int main(void) {
 
 void setListOfTasks() {
   listOfTasks = (struct Task*)malloc(5 * sizeof(struct Task));
-  printf("Memory allocated.\n");
   if (listOfTasks == NULL) {
     printf("Memory not allocated.\n");
     exit(1);
   }
-}
-
-void clearScreen() {
-  printf("\e[1;1H\e[2J");
 }
 
 void displayMenu() {
@@ -47,6 +43,10 @@ void displayMenu() {
   scanf("%d", &selection);
   while (getchar() != '\n');
   promptSelection(selection);
+}
+
+void clearScreen() {
+  printf("\e[1;1H\e[2J");
 }
 
 void promptSelection(int selection) {
@@ -78,6 +78,30 @@ void addTask() {
   return;
 }
 
+char* getInputText(char* descriptionType) {
+  clearScreen();
+  static char inputText[50];
+  printf("Enter task %s: ", descriptionType);
+  fgets(inputText, sizeof(inputText), stdin);
+  inputText[strcspn(inputText, "\n")] = 0;
+  return inputText;
+}
+
+void displayListOfTask() {
+  clearScreen();
+  for (int i = 0; i < amountOfTasks; i++) {
+    printf("Task index: %d\n", i + 1);
+    printf("Task title: %s\n", listOfTasks[i].title);
+    printf("Task description: %s\n", listOfTasks[i].description);
+    printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
+    printf("************************\n");
+  }
+  printf("Press ENTER to exit view");
+  getchar();
+  return;
+}
+
+
 void editTask() {
   int taskIndex = getTaskIndex();
   int editType = getEditType();
@@ -89,8 +113,9 @@ int getTaskIndex() {
   printf("(Enter 0 for list of tasks)\n");
   printf("Enter the index of the task you want to edit: ");
   int taskIndex;
-  scanf("%d", &taskIndex); taskIndex -= 1;
+  scanf("%d", &taskIndex);
   while (getchar() != '\n');
+  taskIndex -= 1;
   return taskIndex;
 }
 
@@ -118,28 +143,4 @@ void deleteTask(int taskIndex) {
      memcpy(&listOfTasks[i], &listOfTasks[i + 1], sizeof(struct Task));
   };
   amountOfTasks--;
-}
-
-char* getInputText(char* descriptionType) {
-  clearScreen();
-  static char inputText[50];
-  printf("Enter task %s: ", descriptionType);
-  fgets(inputText, sizeof(inputText), stdin);
-  inputText[strcspn(inputText, "\n")] = 0;
-  return inputText;
-}
-
-void displayListOfTask() {
-  clearScreen();
-  int i;
-  for (i = 0; i < amountOfTasks; i++) {
-    printf("Task index: %d\n", i + 1);
-    printf("Task title: %s\n", listOfTasks[i].title);
-    printf("Task description: %s\n", listOfTasks[i].description);
-    printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
-    printf("************************\n");
-  }
-  printf("Press ENTER to exit view");
-  getchar();
-  return;
 }
