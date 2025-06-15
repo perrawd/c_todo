@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -51,20 +51,11 @@ void clearScreen() {
 
 void promptSelection(int selection) {
   switch (selection) {
-    case 1:
-      addTask();
-      break;
-    case 2:
-      displayListOfTask();
-      break;
-    case 3:
-      editTask();
-      break;
-    case 4:
-      active = false;
-      break;
-    default:
-      printf("Invalid option.\n");
+    case 1: addTask(); break;
+    case 2: displayListOfTask(); break;
+    case 3: editTask(); break;
+    case 4: active = false; break;
+    default: printf("Invalid option.\n");
   }
 }
 
