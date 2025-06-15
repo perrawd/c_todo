@@ -19,6 +19,7 @@ void displayListOfTask();
 int getTaskIndex();
 int getEditType();
 void processEdit(int taskIndex, int editType);
+void deleteTask(int taskIndex);
 
 int main(void) {
   setListOfTasks();
@@ -88,7 +89,7 @@ int getTaskIndex() {
 
 int getEditType() {
   int editType;
-  printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Cancel\n");
+  printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Delete task\n5. Cancel\n");
   scanf("%d", &editType);
   while (getchar() != '\n');
   return editType;
@@ -99,8 +100,17 @@ void processEdit(int taskIndex, int editType) {
     case 1: listOfTasks[taskIndex].completed = true; break;
     case 2: memcpy(&listOfTasks[taskIndex].title, getInputText("title"), sizeof(listOfTasks[taskIndex].title)); break;
     case 3: memcpy(&listOfTasks[taskIndex].description, getInputText("description"), sizeof(listOfTasks[taskIndex].description)); break;
+    case 4: deleteTask(taskIndex);
     default: return;
   }
+}
+
+void deleteTask(int taskIndex) {
+  for (int i = taskIndex; i < (amountOfTasks - 1); i++) {
+     memcpy(&listOfTasks[i], &listOfTasks[i + 1], sizeof(struct Task));
+  };
+  amountOfTasks--;
+  printf("AmountOfTasks length after delete: %d\n", amountOfTasks);
 }
 
 char* getInputText(char* descriptionType) {
