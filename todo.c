@@ -36,7 +36,12 @@ void setListOfTasks() {
   }
 }
 
+void clearScreen() {
+  printf("\e[1;1H\e[2J");
+}
+
 void displayMenu() {
+  clearScreen();
   int selection;
   printf("1. Add task\n2. List tasks\n3. Edit task\n4. Exit program\n");
   scanf("%d", &selection);
@@ -64,6 +69,7 @@ void promptSelection(int selection) {
 }
 
 void addTask() {
+  clearScreen();
   struct Task newTask = { .ID = amountOfTasks + 1, .completed = false };
   strcpy(newTask.title, getInputText("title"));
   strcpy(newTask.description, getInputText("description"));
@@ -79,6 +85,7 @@ void editTask() {
 }
 
 int getTaskIndex() {
+  clearScreen();
   printf("(Enter 0 for list of tasks)\n");
   printf("Enter the index of the task you want to edit: ");
   int taskIndex;
@@ -88,6 +95,7 @@ int getTaskIndex() {
 }
 
 int getEditType() {
+  clearScreen();
   int editType;
   printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Delete task\n5. Cancel\n");
   scanf("%d", &editType);
@@ -110,10 +118,10 @@ void deleteTask(int taskIndex) {
      memcpy(&listOfTasks[i], &listOfTasks[i + 1], sizeof(struct Task));
   };
   amountOfTasks--;
-  printf("AmountOfTasks length after delete: %d\n", amountOfTasks);
 }
 
 char* getInputText(char* descriptionType) {
+  clearScreen();
   static char inputText[50];
   printf("Enter task %s: ", descriptionType);
   fgets(inputText, sizeof(inputText), stdin);
@@ -122,6 +130,7 @@ char* getInputText(char* descriptionType) {
 }
 
 void displayListOfTask() {
+  clearScreen();
   int i;
   for (i = 0; i < amountOfTasks; i++) {
     printf("Task index: %d\n", i + 1);
@@ -130,5 +139,7 @@ void displayListOfTask() {
     printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
     printf("************************\n");
   }
+  printf("Press ENTER to exit view");
+  getchar();
   return;
 }
