@@ -107,12 +107,12 @@ int getTaskIndex() {
 }
 
 void promptForTaskIndex(int *taskIndex) {
-  while (taskIndex == 0) {
+  while (*taskIndex == 0) {
     clearScreen();
     printf("(Enter 0 for list of tasks)\nEnter the index of the task you want to edit: ");
     scanf("%d", taskIndex);
     while (getchar() != '\n');
-    if (taskIndex == 0) displayListOfTask();
+    if (*taskIndex == 0) displayListOfTask();
   }
 }
 
