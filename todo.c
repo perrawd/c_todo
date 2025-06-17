@@ -20,6 +20,7 @@ void editTask();
 int getTaskIndex();
 void promptForTaskIndex(int *taskIndex);
 int getEditType();
+void promptForEditType(int *editType);
 void processEdit(int taskIndex, int editType);
 void deleteTask(int taskIndex);
 
@@ -117,12 +118,16 @@ void promptForTaskIndex(int *taskIndex) {
 }
 
 int getEditType() {
-  clearScreen();
   int editType;
-  printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Delete task\n5. Cancel\n");
-  scanf("%d", &editType);
-  while (getchar() != '\n');
+  promptForEditType(&editType);
   return editType;
+}
+
+void promptForEditType(int *editType) {
+  clearScreen();
+  printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Delete task\n5. Cancel\n");
+  scanf("%d", editType);
+  while (getchar() != '\n');
 }
 
 void processEdit(int taskIndex, int editType) {
