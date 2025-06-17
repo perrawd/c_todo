@@ -18,6 +18,7 @@ char* getInputText(char* descriptionType);
 void displayListOfTask();
 void editTask();
 int getTaskIndex();
+void promptForTaskIndex(int *taskIndex);
 int getEditType();
 void processEdit(int taskIndex, int editType);
 void deleteTask(int taskIndex);
@@ -102,14 +103,18 @@ void editTask() {
 int getTaskIndex() {
   int taskIndex = 0;
   while (taskIndex == 0) {
-    clearScreen();
-    printf("(Enter 0 for list of tasks)\nEnter the index of the task you want to edit: ");
-    scanf("%d", &taskIndex);
-    while (getchar() != '\n');
+    promptForTaskIndex(&taskIndex);
     if (taskIndex == 0) displayListOfTask();
   }
   taskIndex -= 1;
   return taskIndex;
+}
+
+void promptForTaskIndex(int *taskIndex) {
+  clearScreen();
+  printf("(Enter 0 for list of tasks)\nEnter the index of the task you want to edit: ");
+  scanf("%d", taskIndex);
+  while (getchar() != '\n');
 }
 
 int getEditType() {
