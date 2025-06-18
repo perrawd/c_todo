@@ -13,7 +13,7 @@ struct Task *listOfTasks = NULL;
 
 #define CLEAR_SCREEN printf("\e[1;1H\e[2J");
 
-void loadFile();
+int loadFile();
 void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
@@ -29,15 +29,20 @@ void processEdit(int taskIndex, int editType);
 void deleteTask(int taskIndex);
 
 int main(void) {
-  loadFile();
+  if (loadFile() == 1) return 1;
   setListOfTasks();
   while (active) displayMenu();
   fclose(file);
   return 0;
 }
 
-void loadFile() {
-  file =  fopen("todos.txt", "w");  
+int loadFile() {
+  file =  fopen("todos.txt", "w");
+  if (file == NULL) {
+    perror("Error creating file");
+    return 1;
+  }
+  return 0;
 }
 
 void setListOfTasks() {
