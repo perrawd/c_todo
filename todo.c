@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+FILE* file;
+
 bool active = true;
 int amountOfTasks = 0;
 
@@ -11,6 +13,7 @@ struct Task *listOfTasks = NULL;
 
 #define CLEAR_SCREEN printf("\e[1;1H\e[2J");
 
+void loadFile();
 void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
@@ -26,9 +29,15 @@ void processEdit(int taskIndex, int editType);
 void deleteTask(int taskIndex);
 
 int main(void) {
+  loadFile();
   setListOfTasks();
   while (active) displayMenu();
+  fclose(file);
   return 0;
+}
+
+void loadFile() {
+  file =  fopen("todos.txt", "w");  
 }
 
 void setListOfTasks() {
