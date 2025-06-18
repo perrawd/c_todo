@@ -37,11 +37,36 @@ int main(void) {
 }
 
 int loadFile() {
-  file =  fopen("todos.txt", "w");
+  file =  fopen("todos.txt", "r");
   if (file == NULL) {
     perror("Error creating file");
     return 1;
   }
+
+  // Dynamically get the size of file content
+  fseek(file, 0, SEEK_END);
+  long file_content_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  
+  // Allocate memory to store content
+  char *fileContent = malloc(file_content_size + 1); // +1 for null terminator
+  if (fileContent == NULL) {
+    perror("Memory allocation failed");
+    fclose(file);
+    return 1;
+  }
+
+  // Read file into buffer
+  fread(fileContent, 1, file_content_size, file);
+  fileContent[file_content_size] = '\0'; // Null-terminate
+
+  // Print content (optional)
+  printf("File content:\n%s\n", fileContent);
+
+  // Clean up
+  free(fileContent);
+  fclose(file);
+
   return 0;
 }
 
