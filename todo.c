@@ -9,9 +9,10 @@ int amountOfTasks = 0;
 struct Task { const int ID; char title[50]; char description[50]; bool completed;};
 struct Task *listOfTasks = NULL;
 
+#define CLEAR_SCREEN printf("\e[1;1H\e[2J");
+
 void setListOfTasks();
 void displayMenu();
-void clearScreen();
 void promptSelection(int selection);
 void addTask();
 char* getInputText(char* descriptionType);
@@ -39,16 +40,12 @@ void setListOfTasks() {
 }
 
 void displayMenu() {
-  clearScreen();
+  CLEAR_SCREEN;
   int selection;
   printf("1. Add task\n2. List tasks\n3. Edit task\n4. Exit program\n");
   scanf("%d", &selection);
   while (getchar() != '\n');
   promptSelection(selection);
-}
-
-void clearScreen() {
-  printf("\e[1;1H\e[2J");
 }
 
 void promptSelection(int selection) {
@@ -62,7 +59,7 @@ void promptSelection(int selection) {
 }
 
 void addTask() {
-  clearScreen();
+  CLEAR_SCREEN;
   struct Task newTask = { .ID = amountOfTasks + 1, .completed = false };
   strcpy(newTask.title, getInputText("title"));
   strcpy(newTask.description, getInputText("description"));
@@ -72,7 +69,7 @@ void addTask() {
 }
 
 char* getInputText(char* descriptionType) {
-  clearScreen();
+  CLEAR_SCREEN;
   static char inputText[50];
   printf("Enter task %s: ", descriptionType);
   fgets(inputText, sizeof(inputText), stdin);
@@ -81,7 +78,7 @@ char* getInputText(char* descriptionType) {
 }
 
 void displayListOfTask() {
-  clearScreen();
+  CLEAR_SCREEN;
   for (int i = 0; i < amountOfTasks; i++) {
     printf("Task index: %d\n", i + 1);
     printf("Task title: %s\n", listOfTasks[i].title);
@@ -109,7 +106,7 @@ int getTaskIndex() {
 
 void promptForTaskIndex(int *taskIndex) {
   while (*taskIndex == 0) {
-    clearScreen();
+    CLEAR_SCREEN;
     printf("(Enter 0 for list of tasks)\nEnter the index of the task you want to edit: ");
     scanf("%d", taskIndex);
     while (getchar() != '\n');
@@ -124,7 +121,7 @@ int getEditType() {
 }
 
 void promptForEditType(int *editType) {
-  clearScreen();
+  CLEAR_SCREEN;
   printf("1. Mark task as completed\n2. Edit task title\n3. Edit task description\n4. Delete task\n5. Cancel\n");
   scanf("%d", editType);
   while (getchar() != '\n');
