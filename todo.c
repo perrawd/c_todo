@@ -39,8 +39,8 @@ int main(void) {
 int loadFile() {
   file =  fopen("todos.txt", "r");
   if (file == NULL) {
-    perror("Error creating file");
-    return 1;
+    perror("Error reading file");
+    exit(1);
   }
 
   // Dynamically get the size of file content
@@ -53,7 +53,7 @@ int loadFile() {
   if (fileContent == NULL) {
     perror("Memory allocation failed");
     fclose(file);
-    return 1;
+    exit(1);
   }
 
   // Read file into buffer
