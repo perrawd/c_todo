@@ -60,8 +60,17 @@ int loadFile() {
   fread(fileContent, 1, file_content_size, file);
   fileContent[file_content_size] = '\0'; // Null-terminate
 
-  // Print content (optional)
-  printf("File content:\n%s\n", fileContent);
+
+  // Get the first token
+  const char delimiter[] = "\n";
+  char *token;
+  token = strtok(fileContent, delimiter);
+  // Subsequent tokens
+  while (token != NULL) {
+    printf("%s\n", token);
+    token = strtok(NULL, delimiter);
+  }
+
 
   // Clean up
   free(fileContent);
@@ -79,7 +88,7 @@ void setListOfTasks() {
 }
 
 void displayMenu() {
-  CLEAR_SCREEN;
+  //CLEAR_SCREEN;
   int selection;
   printf("1. Add task\n2. List tasks\n3. Edit task\n4. Exit program\n");
   scanf("%d", &selection);
