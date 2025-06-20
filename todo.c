@@ -16,6 +16,7 @@ struct Task *listOfTasks = NULL;
 int loadFile();
 void loadTask(char *fileContent);
 long getFileContentSize(FILE *file);
+char* getFileContent(long file_content_size);
 void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
@@ -49,16 +50,7 @@ int loadFile() {
   long file_content_size = getFileContentSize(file);
   
   // Allocate memory to store content
-  char *fileContent = malloc(file_content_size + 1); // +1 for null terminator
-  if (fileContent == NULL) {
-    perror("Memory allocation failed");
-    fclose(file);
-    exit(1);
-  }
-
-  // Read file into buffer
-  fread(fileContent, 1, file_content_size, file);
-  fileContent[file_content_size] = '\0'; // Null-terminate
+  char* fileContent = getFileContent(file_content_size);
 
   // Rows
   loadTask(fileContent);
@@ -77,6 +69,19 @@ long getFileContentSize(FILE *file) {
   return file_content_size;
 }
 
+char* getFileContent(long file_content_size) {
+  char *fileContent = malloc(file_content_size + 1); // +1 for null terminator
+  if (fileContent == NULL) {
+    perror("Memory allocation failed");
+    fclose(file);
+    exit(1);
+  }
+  // Read file into buffer
+  fread(fileContent, 1, file_content_size, file);
+  fileContent[file_content_size] = '\0'; // Null-terminate
+  return fileContent;
+}
+
 void loadTask(char *fileContent) {
   // Rows
   const char rowDelimiter[] = "\n";
@@ -87,7 +92,6 @@ void loadTask(char *fileContent) {
   char* token;
   token = strtok_r(fileContent, rowDelimiter, &rowPtr);
   while (token != NULL) {
-    printf("Outer Token: %s\n", token);
     char* inner_token = strtok_r(token, colDelimiter, &colPtr);
     struct Task newTask = { .ID = (inner_token[0] - 1) };
     int col = 0;
