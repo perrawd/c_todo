@@ -8,7 +8,7 @@ FILE* file;
 bool active = true;
 int amountOfTasks = 0;
 
-struct Task { const int ID; char title[50]; char description[50]; bool completed;};
+struct Task { const int ID; char title[50]; char description[50]; bool completed; };
 struct Task *listOfTasks = NULL;
 
 #define CLEAR_SCREEN printf("\e[1;1H\e[2J");
@@ -29,8 +29,8 @@ void processEdit(int taskIndex, int editType);
 void deleteTask(int taskIndex);
 
 int main(void) {
-  if (loadFile() == 1) return 1;
   setListOfTasks();
+  if (loadFile() == 1) return 1;
   while (active) displayMenu();
   fclose(file);
   return 0;
@@ -60,17 +60,40 @@ int loadFile() {
   fread(fileContent, 1, file_content_size, file);
   fileContent[file_content_size] = '\0'; // Null-terminate
 
+    // Rows
+    const char rowDelimiter[] = "\n";
+    const char colDelimiter[] = ";";
+    
+    char* rowPtr = NULL;
+    char* colPtr = NULL;
+    char* token;
+    token = strtok_r(fileContent, rowDelimiter, &rowPtr);
 
-  // Get the first token
-  const char delimiter[] = "\n";
-  char *token;
-  token = strtok(fileContent, delimiter);
-  // Subsequent tokens
-  while (token != NULL) {
-    printf("%s\n", token);
-    token = strtok(NULL, delimiter);
-  }
-
+    while (token != NULL) {
+      printf("Outer Token: %s\n", token);
+      char* inner_token = strtok_r(token, colDelimiter, &colPtr);
+      struct Task newTask = { .ID = (inner_token[0] - 1) };
+      int col = 0;
+      // Columns
+      while (inner_token != NULL) {
+        switch(col) {
+          case 1:
+            strcpy(newTask.title, inner_token);
+            break;
+          case 2:
+            strcpy(newTask.description, inner_token);
+            break;
+          case 3:
+            newTask.completed = strcmp(inner_token, "1") == 0 ? true : false;
+            break;
+        }
+        col++;
+        inner_token = strtok_r(NULL, colDelimiter, &colPtr);
+      }
+      memcpy(&listOfTasks[amountOfTasks], &newTask, sizeof(struct Task));
+      amountOfTasks++;
+      token = strtok_r(NULL, rowDelimiter, &rowPtr);
+    }
 
   // Clean up
   free(fileContent);
@@ -85,6 +108,7 @@ void setListOfTasks() {
     printf("Memory not allocated.\n");
     exit(1);
   }
+  printf("Memory allocated successfully.\n");
 }
 
 void displayMenu() {
