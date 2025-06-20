@@ -15,6 +15,7 @@ struct Task *listOfTasks = NULL;
 
 int loadFile();
 void loadTask(char *fileContent);
+long getFileContentSize(FILE *file);
 void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
@@ -45,9 +46,7 @@ int loadFile() {
   }
 
   // Dynamically get the size of file content
-  fseek(file, 0, SEEK_END);
-  long file_content_size = ftell(file);
-  fseek(file, 0, SEEK_SET);
+  long file_content_size = getFileContentSize(file);
   
   // Allocate memory to store content
   char *fileContent = malloc(file_content_size + 1); // +1 for null terminator
@@ -69,6 +68,13 @@ int loadFile() {
   fclose(file);
 
   return 0;
+}
+
+long getFileContentSize(FILE *file) {
+  fseek(file, 0, SEEK_END);
+  long file_content_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  return file_content_size;
 }
 
 void loadTask(char *fileContent) {
