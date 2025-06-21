@@ -15,7 +15,8 @@ struct Task *listOfTasks = NULL;
 
 void loadFile();
 void setFile(char* mode);
-void loadTask(char *fileContent);
+void loadTasks(char *fileContent);
+struct Task getTask(char* token);
 long getFileContentSize(FILE *file);
 char* getFileContent(long file_content_size);
 void setListOfTasks();
@@ -43,7 +44,7 @@ void loadFile() {
   setFile("r");
   long file_content_size = getFileContentSize(file);  
   char* fileContent = getFileContent(file_content_size);
-  loadTask(fileContent);
+  loadTasks(fileContent);
   free(fileContent);
   fclose(file);
 }
@@ -76,39 +77,37 @@ char* getFileContent(long file_content_size) {
   return fileContent;
 }
 
-void loadTask(char *fileContent) {
-  // Rows
+void loadTasks(char *fileContent) {
   const char rowDelimiter[] = "\n";
-  const char colDelimiter[] = ";";
-  
   char* rowPtr = NULL;
-  char* colPtr = NULL;
   char* token;
   token = strtok_r(fileContent, rowDelimiter, &rowPtr);
+  
   while (token != NULL) {
-    char* inner_token = strtok_r(token, colDelimiter, &colPtr);
-    struct Task newTask = { .ID = (inner_token[0] - 1) };
-    int col = 0;
-    // Columns
-    while (inner_token != NULL) {
-      switch(col) {
-        case 1:
-          strcpy(newTask.title, inner_token);
-          break;
-        case 2:
-          strcpy(newTask.description, inner_token);
-          break;
-        case 3:
-          newTask.completed = strcmp(inner_token, "1") == 0 ? true : false;
-          break;
-      }
-      col++;
-      inner_token = strtok_r(NULL, colDelimiter, &colPtr);
-    }
-    memcpy(&listOfTasks[amountOfTasks], &newTask, sizeof(struct Task));
+    struct Task task = getTask(token);
+    memcpy(&listOfTasks[amountOfTasks], &task, sizeof(struct Task));
     amountOfTasks++;
     token = strtok_r(NULL, rowDelimiter, &rowPtr);
   }
+}
+
+struct Task getTask(char* token) {
+  const char colDelimiter[] = ";";
+  char* colPtr = NULL;
+  char* inner_token = strtok_r(token, colDelimiter, &colPtr);
+  struct Task newTask = { .ID = (inner_token[0] - 1) };
+  int col = 0;
+// Columns
+  while (inner_token != NULL) {
+    switch(col) {
+      case 1: strcpy(newTask.title, inner_token); break;
+      case 2: strcpy(newTask.description, inner_token); break;
+      case 3: newTask.completed = strcmp(inner_token, "1") == 0 ? true : false; break;
+    }
+    col++;
+    inner_token = strtok_r(NULL, colDelimiter, &colPtr);
+  }
+  return newTask;
 }
 
 void setListOfTasks() {
