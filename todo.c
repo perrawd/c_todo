@@ -14,6 +14,7 @@ struct Task *listOfTasks = NULL;
 #define CLEAR_SCREEN printf("\e[1;1H\e[2J");
 
 int loadFile();
+void setFile(char* mode);
 void loadTask(char *fileContent);
 long getFileContentSize(FILE *file);
 char* getFileContent(long file_content_size);
@@ -39,11 +40,7 @@ int main(void) {
 }
 
 int loadFile() {
-  file =  fopen("todos.txt", "r");
-  if (file == NULL) {
-    perror("Error reading file");
-    exit(1);
-  }
+  setFile("r");
 
   // Dynamically get the size of file content
   long file_content_size = getFileContentSize(file);
@@ -59,6 +56,14 @@ int loadFile() {
   fclose(file);
 
   return 0;
+}
+
+void setFile(char* mode) {
+  file = fopen("todos.txt", mode);
+  if (file == NULL) {
+    perror("Error reading file");
+    exit(1);
+  }
 }
 
 long getFileContentSize(FILE *file) {
