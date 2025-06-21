@@ -13,7 +13,7 @@ struct Task *listOfTasks = NULL;
 
 #define CLEAR_SCREEN printf("\e[1;1H\e[2J");
 
-int loadFile();
+void loadFile();
 void setFile(char* mode);
 void loadTask(char *fileContent);
 long getFileContentSize(FILE *file);
@@ -34,28 +34,18 @@ void deleteTask(int taskIndex);
 
 int main(void) {
   setListOfTasks();
-  if (loadFile() == 1) return 1;
+  loadFile();
   while (active) displayMenu();
   return 0;
 }
 
-int loadFile() {
+void loadFile() {
   setFile("r");
-
-  // Dynamically get the size of file content
-  long file_content_size = getFileContentSize(file);
-  
-  // Allocate memory to store content
+  long file_content_size = getFileContentSize(file);  
   char* fileContent = getFileContent(file_content_size);
-
-  // Rows
   loadTask(fileContent);
-
-  // Clean up
   free(fileContent);
   fclose(file);
-
-  return 0;
 }
 
 void setFile(char* mode) {
