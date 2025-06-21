@@ -35,7 +35,6 @@ int main(void) {
   setListOfTasks();
   if (loadFile() == 1) return 1;
   while (active) displayMenu();
-  fclose(file);
   return 0;
 }
 
@@ -127,7 +126,7 @@ void setListOfTasks() {
 }
 
 void displayMenu() {
-  //CLEAR_SCREEN;
+  CLEAR_SCREEN;
   int selection;
   printf("1. Add task\n2. List tasks\n3. Edit task\n4. Exit program\n");
   scanf("%d", &selection);
