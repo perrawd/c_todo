@@ -32,11 +32,13 @@ int getEditType();
 void promptForEditType(int *editType);
 void processEdit(int taskIndex, int editType);
 void deleteTask(int taskIndex);
+void saveFile();
 
 int main(void) {
   setListOfTasks();
   loadFile();
   while (active) displayMenu();
+  saveFile();
   return 0;
 }
 
@@ -215,6 +217,21 @@ void processEdit(int taskIndex, int editType) {
     case 4: deleteTask(taskIndex);
     default: return;
   }
+}
+
+void saveFile() {
+  setFile("w");
+  for (int i = 0; i < amountOfTasks; i++) {
+    fprintf(file, 
+      "%d;%s;%s;%d;", 
+      listOfTasks[i].ID, 
+      listOfTasks[i].title, 
+      listOfTasks[i].description, 
+      listOfTasks[i].completed ? 1 : 0
+    );
+    fprintf(file, "\n");
+  }
+  fclose(file);
 }
 
 void deleteTask(int taskIndex) {
