@@ -17,6 +17,7 @@ void loadFile();
 void setFile(char* mode);
 void loadTasks(char *fileContent);
 struct Task getTask(char* token);
+void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelimiter, char* colPtr);
 long getFileContentSize(FILE *file);
 char* getFileContent(long file_content_size);
 void setListOfTasks();
@@ -98,18 +99,21 @@ struct Task getTask(char* token) {
   char* colPtr = NULL;
   char* inner_token = strtok_r(token, colDelimiter, &colPtr);
   struct Task newTask = { .ID = (inner_token[0] - 1) };
-  int col = 0;
-// Columns
+  setTaskFields(inner_token, &newTask, colDelimiter, colPtr);
+  return newTask;
+}
+
+void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelimiter, char* colPtr) {
+int col = 0;
   while (inner_token != NULL) {
     switch(col) {
-      case 1: strcpy(newTask.title, inner_token); break;
-      case 2: strcpy(newTask.description, inner_token); break;
-      case 3: newTask.completed = strcmp(inner_token, "1") == 0 ? true : false; break;
+      case 1: strcpy(newTask->title, inner_token); break;
+      case 2: strcpy(newTask->description, inner_token); break;
+      case 3: newTask->completed = strcmp(inner_token, "1") == 0 ? true : false; break;
     }
     col++;
     inner_token = strtok_r(NULL, colDelimiter, &colPtr);
   }
-  return newTask;
 }
 
 void setListOfTasks() {
@@ -172,7 +176,6 @@ void displayListOfTask() {
   getchar();
   return;
 }
-
 
 void editTask() {
   int taskIndex = getTaskIndex();
