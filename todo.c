@@ -3,16 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-FILE* file;
-
 bool active = true;
 int amountOfTasks = 0;
 
 struct Task { const int ID; char title[50]; char description[50]; bool completed; };
 struct Task *listOfTasks = NULL;
 
+FILE* file;
+
 #define CLEAR_SCREEN printf("\e[1;1H\e[2J");
 
+void setListOfTasks();
 void loadFile();
 void setFile(char* mode);
 void loadTasks(char *fileContent);
@@ -20,7 +21,6 @@ struct Task getTask(char* token);
 void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelimiter, char* colPtr);
 long getFileContentSize(FILE *file);
 char* getFileContent(long file_content_size);
-void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
 void addTask();
@@ -43,6 +43,14 @@ int main(void) {
   return 0;
 }
 
+void setListOfTasks() {
+  listOfTasks = (struct Task*)malloc(10 * sizeof(struct Task));
+  if (listOfTasks == NULL) {
+    perror("Memory allocation of list of tasks failed.\n");
+    exit(1);
+  }
+}
+
 void loadFile() {
   setFile("r");
   long file_content_size = getFileContentSize(file);  
@@ -55,7 +63,7 @@ void loadFile() {
 void setFile(char* mode) {
   file = fopen("todos.txt", mode);
   if (file == NULL) {
-    perror("Error reading file");
+    perror("Error reading file.");
     exit(1);
   }
 }
@@ -70,7 +78,7 @@ long getFileContentSize(FILE *file) {
 char* getFileContent(long file_content_size) {
   char *fileContent = malloc(file_content_size + 1); // +1 for null terminator
   if (fileContent == NULL) {
-    perror("Memory allocation failed");
+    perror("Memory allocation of file content failed");
     fclose(file);
     exit(1);
   }
@@ -114,15 +122,6 @@ int col = 0;
     col++;
     inner_token = strtok_r(NULL, colDelimiter, &colPtr);
   }
-}
-
-void setListOfTasks() {
-  listOfTasks = (struct Task*)malloc(5 * sizeof(struct Task));
-  if (listOfTasks == NULL) {
-    printf("Memory not allocated.\n");
-    exit(1);
-  }
-  printf("Memory allocated successfully.\n");
 }
 
 void displayMenu() {
@@ -222,6 +221,13 @@ void processEdit(int taskIndex, int editType) {
   }
 }
 
+void deleteTask(int taskIndex) {
+  for (int i = taskIndex; i < (amountOfTasks - 1); i++) {
+     memcpy(&listOfTasks[i], &listOfTasks[i + 1], sizeof(struct Task));
+  };
+  amountOfTasks--;
+}
+
 void saveFile() {
   setFile("w");
   for (int i = 0; i < amountOfTasks; i++) {
@@ -235,11 +241,4 @@ void saveFile() {
     fprintf(file, "\n");
   }
   fclose(file);
-}
-
-void deleteTask(int taskIndex) {
-  for (int i = taskIndex; i < (amountOfTasks - 1); i++) {
-     memcpy(&listOfTasks[i], &listOfTasks[i + 1], sizeof(struct Task));
-  };
-  amountOfTasks--;
 }
