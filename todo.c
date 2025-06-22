@@ -3,14 +3,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+FILE* file;
+
 bool active = true;
 int amountOfTasks = 0;
 
-struct Task { const int ID; char title[50]; char description[50]; bool completed;};
+struct Task { const int ID; char title[50]; char description[50]; bool completed; };
 struct Task *listOfTasks = NULL;
 
 #define CLEAR_SCREEN printf("\e[1;1H\e[2J");
 
+void loadFile();
+void setFile(char* mode);
+void loadTasks(char *fileContent);
+struct Task getTask(char* token);
+void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelimiter, char* colPtr);
+long getFileContentSize(FILE *file);
+char* getFileContent(long file_content_size);
 void setListOfTasks();
 void displayMenu();
 void promptSelection(int selection);
@@ -24,11 +33,87 @@ int getEditType();
 void promptForEditType(int *editType);
 void processEdit(int taskIndex, int editType);
 void deleteTask(int taskIndex);
+void saveFile();
 
 int main(void) {
   setListOfTasks();
+  loadFile();
   while (active) displayMenu();
+  saveFile();
   return 0;
+}
+
+void loadFile() {
+  setFile("r");
+  long file_content_size = getFileContentSize(file);  
+  char* fileContent = getFileContent(file_content_size);
+  loadTasks(fileContent);
+  free(fileContent);
+  fclose(file);
+}
+
+void setFile(char* mode) {
+  file = fopen("todos.txt", mode);
+  if (file == NULL) {
+    perror("Error reading file");
+    exit(1);
+  }
+}
+
+long getFileContentSize(FILE *file) {
+  fseek(file, 0, SEEK_END);
+  long file_content_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  return file_content_size;
+}
+
+char* getFileContent(long file_content_size) {
+  char *fileContent = malloc(file_content_size + 1); // +1 for null terminator
+  if (fileContent == NULL) {
+    perror("Memory allocation failed");
+    fclose(file);
+    exit(1);
+  }
+  // Read file into buffer
+  fread(fileContent, 1, file_content_size, file);
+  fileContent[file_content_size] = '\0'; // Null-terminate
+  return fileContent;
+}
+
+void loadTasks(char *fileContent) {
+  const char rowDelimiter[] = "\n";
+  char* rowPtr = NULL;
+  char* token;
+  token = strtok_r(fileContent, rowDelimiter, &rowPtr);
+  
+  while (token != NULL) {
+    struct Task task = getTask(token);
+    memcpy(&listOfTasks[amountOfTasks], &task, sizeof(struct Task));
+    amountOfTasks++;
+    token = strtok_r(NULL, rowDelimiter, &rowPtr);
+  }
+}
+
+struct Task getTask(char* token) {
+  const char colDelimiter[] = ";";
+  char* colPtr = NULL;
+  char* inner_token = strtok_r(token, colDelimiter, &colPtr);
+  struct Task newTask = { .ID = (inner_token[0] - 1) };
+  setTaskFields(inner_token, &newTask, colDelimiter, colPtr);
+  return newTask;
+}
+
+void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelimiter, char* colPtr) {
+int col = 0;
+  while (inner_token != NULL) {
+    switch(col) {
+      case 1: strcpy(newTask->title, inner_token); break;
+      case 2: strcpy(newTask->description, inner_token); break;
+      case 3: newTask->completed = strcmp(inner_token, "1") == 0 ? true : false; break;
+    }
+    col++;
+    inner_token = strtok_r(NULL, colDelimiter, &colPtr);
+  }
 }
 
 void setListOfTasks() {
@@ -37,6 +122,7 @@ void setListOfTasks() {
     printf("Memory not allocated.\n");
     exit(1);
   }
+  printf("Memory allocated successfully.\n");
 }
 
 void displayMenu() {
@@ -91,7 +177,6 @@ void displayListOfTask() {
   return;
 }
 
-
 void editTask() {
   int taskIndex = getTaskIndex();
   int editType = getEditType();
@@ -135,6 +220,21 @@ void processEdit(int taskIndex, int editType) {
     case 4: deleteTask(taskIndex);
     default: return;
   }
+}
+
+void saveFile() {
+  setFile("w");
+  for (int i = 0; i < amountOfTasks; i++) {
+    fprintf(file, 
+      "%d;%s;%s;%d;", 
+      listOfTasks[i].ID, 
+      listOfTasks[i].title, 
+      listOfTasks[i].description, 
+      listOfTasks[i].completed ? 1 : 0
+    );
+    fprintf(file, "\n");
+  }
+  fclose(file);
 }
 
 void deleteTask(int taskIndex) {
