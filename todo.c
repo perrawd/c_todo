@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 bool active = true;
 int amountOfTasks = 0;
@@ -151,6 +152,17 @@ void addTask() {
   memcpy(&listOfTasks[amountOfTasks], &newTask, sizeof(struct Task));
   amountOfTasks++;
   return;
+}
+
+char* getDateTimeStr() {
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    char* dateTimeStr = (char*)malloc(20 * sizeof(char));
+    if (dateTimeStr == NULL) return NULL;
+    snprintf(dateTimeStr, 20, "%d-%02d-%02d %02d:%02d:%02d", 
+             tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, 
+             tm.tm_hour, tm.tm_min, tm.tm_sec);
+    return dateTimeStr;
 }
 
 char* getInputText(char* descriptionType) {
