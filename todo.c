@@ -7,7 +7,7 @@
 bool active = true;
 int amountOfTasks = 0;
 
-struct Task { const int ID; char title[50]; char description[50]; bool completed; };
+struct Task { const int ID; char title[50]; char description[50]; bool completed; char created[50]; char updated[50]; };
 struct Task *listOfTasks = NULL;
 
 FILE* file;
@@ -25,6 +25,7 @@ char* getFileContent(long file_content_size);
 void displayMenu();
 void promptSelection(int selection);
 void addTask();
+char* getDateTimeStr();
 char* getInputText(char* descriptionType);
 void displayListOfTask();
 void editTask();
@@ -119,6 +120,7 @@ int col = 0;
       case 1: strcpy(newTask->title, inner_token); break;
       case 2: strcpy(newTask->description, inner_token); break;
       case 3: newTask->completed = strcmp(inner_token, "1") == 0 ? true : false; break;
+      case 4: strcpy(newTask->created, inner_token); break;
     }
     col++;
     inner_token = strtok_r(NULL, colDelimiter, &colPtr);
@@ -149,6 +151,9 @@ void addTask() {
   struct Task newTask = { .ID = amountOfTasks + 1, .completed = false };
   strcpy(newTask.title, getInputText("title"));
   strcpy(newTask.description, getInputText("description"));
+  char* created = getDateTimeStr();
+  strcpy(newTask.created, created);
+  free(created);
   memcpy(&listOfTasks[amountOfTasks], &newTask, sizeof(struct Task));
   amountOfTasks++;
   return;
@@ -157,9 +162,9 @@ void addTask() {
 char* getDateTimeStr() {
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    char* dateTimeStr = (char*)malloc(20 * sizeof(char));
+    char* dateTimeStr = (char*)malloc(50 * sizeof(char));
     if (dateTimeStr == NULL) return NULL;
-    snprintf(dateTimeStr, 20, "%d-%02d-%02d %02d:%02d:%02d", 
+    snprintf(dateTimeStr, 50, "%d-%02d-%02d %02d:%02d:%02d", 
              tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, 
              tm.tm_hour, tm.tm_min, tm.tm_sec);
     return dateTimeStr;
@@ -181,6 +186,7 @@ void displayListOfTask() {
     printf("Task title: %s\n", listOfTasks[i].title);
     printf("Task description: %s\n", listOfTasks[i].description);
     printf("Completed: %s\n", listOfTasks[i].completed ? "Yes" : "No");
+    printf("Created: %s\n", listOfTasks[i].created);
     printf("************************\n");
   }
   printf("Press ENTER to exit view");
@@ -244,11 +250,12 @@ void saveFile() {
   setFile("w");
   for (int i = 0; i < amountOfTasks; i++) {
     fprintf(file, 
-      "%d;%s;%s;%d;", 
+      "%d;%s;%s;%d;%s;", 
       listOfTasks[i].ID, 
       listOfTasks[i].title, 
       listOfTasks[i].description, 
-      listOfTasks[i].completed ? 1 : 0
+      listOfTasks[i].completed ? 1 : 0,
+      listOfTasks[i].created
     );
     fprintf(file, "\n");
   }
