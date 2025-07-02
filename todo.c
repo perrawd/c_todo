@@ -149,10 +149,10 @@ void promptSelection(int selection) {
 void addTask() {
   CLEAR_SCREEN;
   struct Task newTask = { .ID = amountOfTasks + 1, .completed = false };
-  strcpy(newTask.title, getInputText("title"));
-  strcpy(newTask.description, getInputText("description"));
+  snprintf(newTask.title, sizeof(newTask.title), "%s", getInputText("title"));
+  snprintf(newTask.description, sizeof(newTask.description), "%s", getInputText("description"));
   char* created = getDateTimeStr();
-  strcpy(newTask.created, created);
+  snprintf(newTask.created, sizeof(newTask.created), "%s", created);
   free(created);
   memcpy(&listOfTasks[amountOfTasks], &newTask, sizeof(struct Task));
   amountOfTasks++;
