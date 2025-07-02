@@ -232,8 +232,8 @@ void promptForEditType(int *editType) {
 void processEdit(int taskIndex, int editType) {
   switch(editType) {
     case 1: listOfTasks[taskIndex].completed = true; break;
-    case 2: memcpy(&listOfTasks[taskIndex].title, getInputText("title"), sizeof(listOfTasks[taskIndex].title)); break;
-    case 3: memcpy(&listOfTasks[taskIndex].description, getInputText("description"), sizeof(listOfTasks[taskIndex].description)); break;
+    case 2: snprintf(listOfTasks[taskIndex].title, sizeof(listOfTasks[taskIndex].title), "%s", getInputText("title")); break;
+    case 3: snprintf(listOfTasks[taskIndex].description, sizeof(listOfTasks[taskIndex].description), "%s", getInputText("description")); break;
     case 4: deleteTask(taskIndex);
     default: return;
   }
