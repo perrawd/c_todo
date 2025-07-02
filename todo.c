@@ -117,10 +117,10 @@ void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelim
 int col = 0;
   while (inner_token != NULL) {
     switch(col) {
-      case 1: strcpy(newTask->title, inner_token); break;
-      case 2: strcpy(newTask->description, inner_token); break;
+      case 1: snprintf(newTask->title, sizeof(newTask->title), "%s", inner_token); break;
+      case 2: snprintf(newTask->description, sizeof(newTask->description), "%s", inner_token); break;
       case 3: newTask->completed = strcmp(inner_token, "1") == 0 ? true : false; break;
-      case 4: strcpy(newTask->created, inner_token); break;
+      case 4: snprintf(newTask->created, sizeof(newTask->created), "%s", inner_token); break;
     }
     col++;
     inner_token = strtok_r(NULL, colDelimiter, &colPtr);
