@@ -20,6 +20,7 @@ void setFile(char* mode);
 void loadTasks(char *fileContent);
 struct Task getTask(char* token);
 void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelimiter, char* colPtr);
+void setStrField(char* inner_token, char* field);
 long getFileContentSize(FILE *file);
 char* getFileContent(long file_content_size);
 void displayMenu();
@@ -117,13 +118,22 @@ void setTaskFields(char* inner_token, struct Task* newTask, const char* colDelim
 int col = 0;
   while (inner_token != NULL) {
     switch(col) {
-      case 1: snprintf(newTask->title, sizeof(newTask->title), "%s", inner_token); break;
-      case 2: snprintf(newTask->description, sizeof(newTask->description), "%s", inner_token); break;
+      case 1: setStrField(inner_token, newTask->title); break;
+      case 2: setStrField(inner_token, newTask->description); break;
       case 3: newTask->completed = strcmp(inner_token, "1") == 0 ? true : false; break;
       case 4: snprintf(newTask->created, sizeof(newTask->created), "%s", inner_token); break;
     }
     col++;
     inner_token = strtok_r(NULL, colDelimiter, &colPtr);
+  }
+}
+
+
+void setStrField(char* inner_token, char* field) {
+  if (strlen(inner_token) > 0) {
+    snprintf(field, sizeof(field), "%s", inner_token);
+  } else {
+    snprintf(field, sizeof(field), "%s","Hello World"); // or use an empty string ""
   }
 }
 
